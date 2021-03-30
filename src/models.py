@@ -26,8 +26,9 @@ class Planet(Base):
     climate = Column(String(250))
     terrain = Column(String(250), nullable=False)
     surface_water = Column(Integer)  
+    characters = relationship('character', backref='planet', lazy=True)
+    species = relationship('specie', backref='planet', lazy=True)
  
-    
 
 class Character(Base):
     __tablename__ = 'character'
@@ -40,8 +41,9 @@ class Character(Base):
     eye_color = Column(String(250))
     birth_year = Column(String(250), nullable=False)
     gender = Column(String(30), nullable=False)
-    planet_id = Column(Integer,ForeignKey('planet.id'), nullable=False)
-    planet = relationship(Planet)
+    planet_id = Column(Integer, ForeignKey('planet.id'),nullable=False)
+    # planet_id = Column(Integer,ForeignKey('planet.id'), nullable=False)
+    # planet = relationship(Planet)
 
 class Specie(Base):
     __tablename__='specie'
@@ -55,15 +57,17 @@ class Specie(Base):
     skin_colors = Column(String(250))
     eye_colors = Column(String(250))
     language = Column(String(250))
-    planet_id = Column(Integer,ForeignKey('planet.id'), nullable=False)
-    planet = relationship(Planet)
+    planet_id = Column(Integer, ForeignKey('planet.id'),nullable=False)
+    characters = relationship('character', secondary='specie_character', lazy='subquery',backref=('specie'))
+    # planet_id = Column(Integer,ForeignKey('planet.id'), nullable=False)
+    # planet = relationship(Planet)
 
 class SpecieCharacter(Base):
     __tablename__='specie_character'
     id_character=Column(Integer, ForeignKey('character.id'),primary_key=True)
     id_specie=Column(Integer, ForeignKey('specie.id'),primary_key=True)
-    character=relationship(Character)
-    specie=relationship(Specie)
+    # character=relationship(Character)
+    # specie=relationship(Specie)
 
 class Film(Base):
     __tablename__='film'
@@ -74,33 +78,36 @@ class Film(Base):
     director = Column(String(250), nullable=False)
     release_date = Column(String(250), nullable=False)
     opening = Column(String(8000))
+    characters = relationship('character', secondary='film_character', lazy='subquery',backref=('film'))
+    planets = relationship('planet', secondary='film_planet', lazy='subquery',backref=('film'))
+    species = relationship('specie', secondary='film_specie', lazy='subquery',backref=('film'))
 
 class FilmCharacter(Base):
     __tablename__='film_character'
     id_character=Column(Integer, ForeignKey('character.id'),primary_key=True)
     id_film=Column(Integer, ForeignKey('film.id'),primary_key=True)
-    character=relationship(Character)
-    film=relationship(Film)
+    # character=relationship(Character)
+    # film=relationship(Film)
 
 class FilmPlanet(Base):
     __tablename__='film_planet'
     id_planet=Column(Integer, ForeignKey('planet.id'),primary_key=True)
     id_film=Column(Integer, ForeignKey('film.id'),primary_key=True)
-    planet=relationship(Planet)
-    film=relationship(Film)
+    # planet=relationship(Planet)
+    # film=relationship(Film)
 
 class FilmSpecie(Base):
     __tablename__='film_specie'
     id_specie=Column(Integer, ForeignKey('specie.id'),primary_key=True)
     id_film=Column(Integer, ForeignKey('film.id'),primary_key=True)
-    specie=relationship(Specie)
-    film=relationship(Film)
+    # specie=relationship(Specie)
+    # film=relationship(Film)
 
 class Favorite(Base):
     __tablename__='favorite'
     id=Column(Integer,primary_key=True)
     user_id = Column(Integer,ForeignKey('user.id'), nullable=False)
-    user = relationship(User)
+    # user = relationship(User)
     favorite_id=Column(Integer, nullable=False)
     favorite_name=Column(String(250),nullable=False)
     favorite_type = Column(String(1))

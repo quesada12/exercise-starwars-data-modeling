@@ -42,8 +42,7 @@ class Character(Base):
     birth_year = Column(String(250), nullable=False)
     gender = Column(String(30), nullable=False)
     planet_id = Column(Integer, ForeignKey('planet.id'),nullable=False)
-    # planet_id = Column(Integer,ForeignKey('planet.id'), nullable=False)
-    # planet = relationship(Planet)
+  
 
 class Specie(Base):
     __tablename__='specie'
@@ -59,15 +58,13 @@ class Specie(Base):
     language = Column(String(250))
     planet_id = Column(Integer, ForeignKey('planet.id'),nullable=False)
     characters = relationship('character', secondary='specie_character', lazy='subquery',backref=('specie'))
-    # planet_id = Column(Integer,ForeignKey('planet.id'), nullable=False)
-    # planet = relationship(Planet)
+   
 
 class SpecieCharacter(Base):
     __tablename__='specie_character'
     id_character=Column(Integer, ForeignKey('character.id'),primary_key=True)
     id_specie=Column(Integer, ForeignKey('specie.id'),primary_key=True)
-    # character=relationship(Character)
-    # specie=relationship(Specie)
+   
 
 class Film(Base):
     __tablename__='film'
@@ -86,28 +83,24 @@ class FilmCharacter(Base):
     __tablename__='film_character'
     id_character=Column(Integer, ForeignKey('character.id'),primary_key=True)
     id_film=Column(Integer, ForeignKey('film.id'),primary_key=True)
-    # character=relationship(Character)
-    # film=relationship(Film)
+
 
 class FilmPlanet(Base):
     __tablename__='film_planet'
     id_planet=Column(Integer, ForeignKey('planet.id'),primary_key=True)
     id_film=Column(Integer, ForeignKey('film.id'),primary_key=True)
-    # planet=relationship(Planet)
-    # film=relationship(Film)
+  
 
 class FilmSpecie(Base):
     __tablename__='film_specie'
     id_specie=Column(Integer, ForeignKey('specie.id'),primary_key=True)
     id_film=Column(Integer, ForeignKey('film.id'),primary_key=True)
-    # specie=relationship(Specie)
-    # film=relationship(Film)
+  
 
 class Favorite(Base):
     __tablename__='favorite'
     id=Column(Integer,primary_key=True)
     user_id = Column(Integer,ForeignKey('user.id'), nullable=False)
-    # user = relationship(User)
     favorite_id=Column(Integer, nullable=False)
     favorite_name=Column(String(250),nullable=False)
     favorite_type = Column(String(1))
